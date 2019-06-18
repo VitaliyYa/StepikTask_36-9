@@ -1,3 +1,9 @@
+# my_ignore
+.vscode/
+selenium_env/
+chrome-data/
+geckodriver.log
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
