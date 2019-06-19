@@ -17,22 +17,18 @@ def pytest_addoption(parser):
 def browser(request):
   language = request.config.getoption('language')
   if language == "ru":
-    print("\nStart chrome languages ru for test..")
     options = Options()
     options.add_experimental_option('prefs', {'intl.accept_languages': 'ru'})
     browser = webdriver.Chrome(options=options)
   elif language == "es":
-    print("\nStart chrome languages en for test..")
     options = Options()
     options.add_experimental_option('prefs', {'intl.accept_languages': 'es'})
     browser = webdriver.Chrome(options=options)
   elif language == "fr":
-    print("\nStart chrome languages en for test..")
     options = Options()
     options.add_experimental_option('prefs', {'intl.accept_languages': 'fr'})
     browser = webdriver.Chrome(options=options)
   else:
     print(f'Язык {language} не поддерживается. Выберите ru, es или fr.')
   yield browser
-  print("\nQuit browser..")
   browser.quit()
