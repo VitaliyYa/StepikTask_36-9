@@ -1,29 +1,24 @@
-'''
-Добавьте в файл conftest.py обработчик, который считывает из командной строки параметр language.
-Реализуйте в файле conftest.py логику запуска браузера с указанным языком пользователя.
-Браузер должен объявляться в фикстуре browser и передаваться в тест как параметр.
-'''
-
 import pytest
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
 
 
+# описываем аргумент командной строки
 def pytest_addoption(parser):
-  parser.addoption('--language', action='store', default='ru',
-  help='Choose language: ar ca cs da de el en es fi fr it ko nl pl pt pt-br ro ru sk uk zh-hans en-gb')
+    parser.addoption("--language", action="store", default=None, help="Choose user language")
 
 
 @pytest.fixture(scope="function")
 def browser(request):
-  languages = ['ar', 'ca', 'cs', 'da', 'de', 'el', 'en', 'es', 'fi', 'fr', 'it', 'ko', 'nl', 'pl', 'pt', 'pt-br', 'ro', 'ru', 'sk', 'uk', 'zh-hans', 'en-gb']
-  language = request.config.getoption('language')
-  if language in languages:
+    # считываем аргумент командной строк
+    user_language = request.config.getoption("language")
+    from selenium.webdriver.chrome.options import Options
     options = Options()
-    options.add_experimental_option('prefs', {'intl.accept_languages': language})
-    browser = webdriver.Chrome(options=options)
-  else:
-    print(f'\nlanguage "{language}"" is not supported. Язык "{language}" не поддерживается.')
-    print(f'Try: {", ".join(languages)}.')
-  yield browser
-  browser.quit()
+    options.add_experimental_option("prefs", {"intl.accept_languages": user_language})
+
+    import os
+    from selenium import webdriver
+    print(os.path.abspath(os.path.join(os.getcwd(), os.pardir, "chromedriver.exe")))
+    driver = webdriver.Chrome(executable_path=os.path.abspath(os.path.join(os.getcwd(), os.pardir, "chromedriver.exe")),
+                              options=options)
+
+    yield driver
+    driver.quit()
