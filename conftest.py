@@ -1,37 +1,29 @@
-'''
-Добавьте в файл conftest.py обработчик, который считывает из командной строки параметр language.
-Реализуйте в файле conftest.py логику запуска браузера с указанным языком пользователя.
-Браузер должен объявляться в фикстуре browser и передаваться в тест как параметр.
-'''
-
+import pytest
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-import pytest
-
 
 def pytest_addoption(parser):
-    parser.addoption('--language', action='store', default=None, help="Choose language")
-    parser.addoption('--browser_name', action='store', default=None,
+    parser.addoption('--browser_name', action='store', default="chrome",
                      help="Choose browser: chrome or firefox")
-
-
+    parser.addoption('--language', action='store', default="ru",
+                     help="Choose language for chrome or firefox browser")
+                     
 @pytest.fixture(scope="function")
 def browser(request):
-    print("\nstart browser for test..")
-    language = request.config.getoption("language")
     browser_name = request.config.getoption("browser_name")
+    language = request.config.getoption("language")
     if browser_name == "chrome":
-        print("\nstart chrome browser for test..")
+        print("\nstart chrome browser(language '{}') for test..".format(language))
         options = Options()
         options.add_experimental_option('prefs', {'intl.accept_languages': language})
         browser = webdriver.Chrome(options=options)
     elif browser_name == "firefox":
-        print("\nstart firefox browser for test..")
-        ff_profile = webdriver.FirefoxProfile()
-        ff_profile.set_preference("intl.accept_languages", language)
-        browser = webdriver.Firefox(firefox_profile=ff_profile)
+        print("\nstart firefox browser(language '{}') for test..".format(language))
+        fp = webdriver.FirefoxProfile()
+        fp.set_preference("intl.accept_languages", language)
+        browser = webdriver.Firefox(firefox_profile=fp)
     else:
-        print("Browser {} is not implemented".format(browser_name))
+        print("Browser {} still is not implemented".format(browser_name))
     yield browser
     print("\nquit browser..")
     browser.quit()

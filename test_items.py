@@ -1,16 +1,14 @@
-'''
-В файл test_items.py напишите тест, который проверяет, что страница товара на сайте содержит кнопку добавления в корзину.
-Например, можно проверять товар, доступный по http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/.
-'''
-
 import time
-
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 link = "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/"
 
-
-def test_add_to_cart_button_presence(browser):
+def test_add_product_button(browser):
     browser.get(link)
-    time.sleep(10)
-    button = browser.find_element_by_css_selector('butеton.btn-add-to-basket')
-    assert button
+    assert WebDriverWait(browser, 5).until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, "[type = submit]:nth-child(3)"))
+        ), 'There is no product add button'
+    time.sleep(5)
