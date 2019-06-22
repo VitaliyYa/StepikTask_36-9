@@ -6,11 +6,11 @@
 import time
 
 
-link = 'http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/'
+link = "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/"
 
 
-def test_button_add_to_cart(browser): 
-  browser.get(link)
-  # time.sleep(30)
-  button = browser.find_element_by_css_selector('button.btn-add-to-basket').get_attribute('value')
-  assert len(button) > 0, 'Add to cart button not found. (Кнопка добавления в корзину не найдена)'
+def test_add_to_cart_button_presence(browser):
+    browser.get(link)
+    time.sleep(10)
+    button = browser.find_element_by_css_selector('butеton.btn-add-to-basket')
+    assert button
